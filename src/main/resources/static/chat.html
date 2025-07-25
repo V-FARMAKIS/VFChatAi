@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFChat | AI Assistant ⚡</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #ffbe0b;
+            --background: #0f0f23;
+            --surface: #1a1a3a;
+            --border: #2a2a4a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #666;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff0080;
+            --void-black: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 100%);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        
+        .chat-interface {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 0;
+        }
+
+        .conversations-sidebar {
+            background: rgba(15, 15, 35, 0.9);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .new-chat-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .new-chat-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .conversation-item.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .conversation-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-preview {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.25rem;
+        }
+
+        .conversation-date {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .conversation-actions {
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .conversation-item:hover .conversation-actions {
+            opacity: 1;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .action-icon-btn.rename:hover {
+            color: var(--warning);
+        }
+
+        .action-icon-btn.delete:hover {
+            color: var(--danger);
+        }
+
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn-modal {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-modal.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-modal.primary:hover {
+            background: #5856eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-modal.secondary {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-modal.secondary:hover {
+            background: var(--surface);
+        }
+
+        .btn-modal.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-modal.danger:hover {
+            background: #dc2626;
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .setting-label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .setting-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        
+        .neural-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .void-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+
+        .neural-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 35, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .header-grid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 98%;
+            margin: 0 auto;
+        }
+
+        .logo-complex {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .brand-primary {
+            color: var(--primary);
+        }
+
+        .brand-accent {
+            color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-neural-primary {
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-neural-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .chat-container {
+            max-width: 98%;
+            margin: 0 auto;
+            padding: 1rem;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-interface {
+            background: rgba(26, 26, 58, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            height: calc(100vh - 120px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: linear-gradient(135deg, rgba(15, 15, 35, 0.5), rgba(26, 26, 58, 0.5));
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 85%;
+            animation: slideInMessage 0.3s ease-out;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .assistant-message {
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .user-message .message-avatar {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+        }
+
+        .message-content {
+            background: rgba(26, 26, 58, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.2rem 1.5rem;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            color: var(--text-primary);
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .message-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .message-text {
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .image-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .generated-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .image-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .typing-indicator {
+            opacity: 0.8;
+        }
+
+        .typing-animation {
+            display: inline-flex;
+            gap: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .typing-animation span {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-animation span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-animation span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chat-input {
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-complex {
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            background: rgba(26, 26, 58, 0.8);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        #message-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            background: rgba(26, 26, 58, 0.9);
+        }
+
+        #message-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-dopamine-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: var(--void-black);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-dopamine-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary-neural {
+            background: linear-gradient(135deg, var(--success), #059669);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-secondary-neural:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(34, 197, 94, 0.4);
+        }
+
+        .chat-status {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            max-width: 350px;
+            display: none;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes slideInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(26, 26, 58, 0.3);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        .conversations-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .conversations-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 3px;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        @media (max-width: 1024px) {
+            .chat-interface {
+                grid-template-columns: 280px 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-grid {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .chat-container {
+                padding: 1rem;
+            }
+
+            .chat-interface {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 120px);
+            }
+
+            .conversations-sidebar {
+                display: none;
+            }
+
+            .conversations-sidebar.mobile-open {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100%;
+                z-index: 200;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .message {
+                max-width: 95%;
+            }
+
+            .input-complex {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn-dopamine-primary, .btn-secondary-neural {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .modal-container {
+                padding: 1.5rem;
+                max-width: 95%;
+            }
+        }
+
+        .glow-hover:hover {
+            text-shadow: 0 0 10px currentColor;
+        }
+    </style>
+</head>
+<body>
+<div class="void-container">
+<header class="neural-header">
+    <div class="header-grid">
+        <div class="logo-complex">
+            <div class="logo-icon pulsing-core">⚡</div>
+            <div class="logo-text">
+                <span class="brand-primary">VF</span><span class="brand-accent">Chat</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <a href="/landingpage.html" class="btn-ghost glow-hover">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <button id="logout-btn" class="btn-neural-primary">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="chat-container">
+    <div class="chat-interface">
+        
+        <div class="conversations-sidebar" id="conversations-sidebar">
+            <div class="sidebar-header">
+                <h3>💬 Conversations</h3>
+                <button onclick="vfChatAI.startNewConversation()" class="new-chat-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="conversations-list" id="conversations-list">
+                
+            </div>
+        </div>
+
+        
+        <div class="chat-content">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <span class="status-indicator"></span>
+                    🤖 AI Assistant
+                </div>
+                <div class="header-controls">
+                    <button id="new-chat-btn" class="control-btn">
+                        <i class="fas fa-plus"></i> New Chat
+                    </button>
+                    <button id="settings-btn" class="control-btn">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+            </div>
+
+            <div id="chat-messages" class="chat-messages">
+                <div class="message assistant-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">VF Assistant</span>
+                            <span class="message-time">Just now</span>
+                        </div>
+                        <div class="message-text">
+                            <strong>⚡ Welcome to VFChat AI!</strong>
+                            <br><br>
+                            I'm your intelligent assistant powered by <strong>Google Gemini</strong>. I can help you with:
+                            <br><br>
+                            🧠 <strong>Smart Conversations</strong> - Ask me anything!
+                            <br>📝 <strong>Writing & Analysis</strong> - Content creation and research
+                            <br>💻 <strong>Code Assistance</strong> - Programming help and debugging
+                            <br>🎨 <strong>Image Generation</strong> - Create stunning visuals instantly
+                            <br>🚀 <strong>Creative Tasks</strong> - Brainstorming and ideation
+                            <br><br>
+                            <em>What would you like to explore today?</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <div class="input-complex">
+                    <input type="text" id="message-input"
+                           placeholder="Ask me anything or request an image generation..."
+                           autocomplete="off">
+                    <button id="send-btn" class="btn-dopamine-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send</span>
+                    </button>
+                    <button id="image-btn" class="btn-secondary-neural">
+                        <i class="fas fa-image"></i>
+                        <span>Image</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="modal-overlay" id="settings-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">⚙️ Settings</h2>
+            <button class="modal-close" onclick="vfChatAI.closeSettingsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="settings-section">
+                <h3>🎨 Appearance</h3>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Dark Mode</div>
+                        <div class="setting-description">Use dark theme for better eye comfort</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="vfChatAI.toggleSetting('darkMode', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Animations</div>
+                        <div class="setting-description">Enable smooth animations and transitions</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="vfChatAI.toggleSetting('animations', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🤖 AI Settings</h3>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Auto-Save Conversations</div>
+                        <div class="setting-description">Automatically save your chat history</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="vfChatAI.toggleSetting('autoSave', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Show Typing Indicator</div>
+                        <div class="setting-description">Display when AI is generating response</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="vfChatAI.toggleSetting('typingIndicator', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🔔 Notifications</h3>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Sound Effects</div>
+                        <div class="setting-description">Play sounds for message alerts</div>
+                    </div>
+                    <div class="toggle-switch" onclick="vfChatAI.toggleSetting('soundEffects', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Desktop Notifications</div>
+                        <div class="setting-description">Show browser notifications for new messages</div>
+                    </div>
+                    <div class="toggle-switch" onclick="vfChatAI.toggleSetting('desktopNotifications', this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>💾 Data & Privacy</h3>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Export Conversations</div>
+                        <div class="setting-description">Download your chat history as JSON</div>
+                    </div>
+                    <button class="btn-modal secondary" onclick="vfChatAI.exportConversations()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Clear All Data</div>
+                        <div class="setting-description">Delete all conversations and settings</div>
+                    </div>
+                    <button class="btn-modal danger" onclick="vfChatAI.clearAllData()">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal secondary" onclick="vfChatAI.closeSettingsModal()">Cancel</button>
+            <button class="btn-modal primary" onclick="vfChatAI.saveSettings()">Save Settings</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay" id="rename-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">✏️ Rename Conversation</h2>
+            <button class="modal-close" onclick="vfChatAI.closeRenameModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="form-group">
+                <label class="form-label" for="conversation-name">Conversation Name</label>
+                <input type="text" id="conversation-name" class="form-input"
+                       placeholder="Enter new conversation name..." maxlength="100">
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal secondary" onclick="vfChatAI.closeRenameModal()">Cancel</button>
+            <button class="btn-modal primary" onclick="vfChatAI.saveConversationName()">Save</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay" id="delete-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">⚠️ Delete Conversation</h2>
+            <button class="modal-close" onclick="vfChatAI.closeDeleteModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <p>Are you sure you want to delete this conversation? This action cannot be undone.</p>
+            <p style="margin-top: 1rem; color: var(--text-muted); font-style: italic;">
+                Conversation: "<span id="delete-conversation-name"></span>"
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal secondary" onclick="vfChatAI.closeDeleteModal()">Cancel</button>
+            <button class="btn-modal danger" onclick="vfChatAI.confirmDeleteConversation()">Delete</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay" id="image-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">🎨 Generate Image</h2>
+            <button class="modal-close" onclick="vfChatAI.closeImageModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="form-group">
+                <label class="form-label" for="image-prompt">Describe the image you want to create</label>
+                <textarea id="image-prompt" class="form-input" rows="4"
+                          placeholder="e.g., A futuristic cityscape at sunset with flying cars and neon lights..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image Style (Optional)</label>
+                <select id="image-style" class="form-input">
+                    <option value="">Default</option>
+                    <option value="photorealistic">Photorealistic</option>
+                    <option value="digital art">Digital Art</option>
+                    <option value="anime">Anime/Manga</option>
+                    <option value="oil painting">Oil Painting</option>
+                    <option value="watercolor">Watercolor</option>
+                    <option value="sketch">Pencil Sketch</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="fantasy">Fantasy</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal secondary" onclick="vfChatAI.closeImageModal()">Cancel</button>
+            <button class="btn-modal primary" onclick="vfChatAI.generateImageFromModal()">
+                <i class="fas fa-magic"></i> Generate Image
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="chat-status" class="chat-status"></div>
+
+<script>
+    function initializeParticles() {
+        const container = document.getElementById('particles');
+        if (!container) return;
+
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+            container.appendChild(particle);
+        }
+    }
+
+    class VFChatAI {
+        constructor() {
+            this.apiBaseUrl = '/api/chat';
+            this.currentConversationId = null;
+            this.userId = 'user_' + Date.now();
+            this.conversations = [];
+            this.settings = this.loadSettings();
+            this.conversationToDelete = null;
+            this.conversationToRename = null;
+
+            this.setupEventListeners();
+            this.checkSession();
+            this.loadConversations();
+            this.applySettings();
+        }
+
+
+        loadSettings() {
+            const defaultSettings = {
+                darkMode: true,
+                animations: true,
+                autoSave: true,
+                typingIndicator: true,
+                soundEffects: false,
+                desktopNotifications: false
+            };
+
+            try {
+                const saved = localStorage.getItem('vfchat_settings');
+                return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                return defaultSettings;
+            }
+        }
+
+        saveSettings() {
+            try {
+                localStorage.setItem('vfchat_settings', JSON.stringify(this.settings));
+                this.showStatus('⚙️ Settings saved successfully', 'success');
+                this.closeSettingsModal();
+                this.applySettings();
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                this.showStatus('❌ Failed to save settings', 'danger');
+            }
+        }
+
+        applySettings() {
+
+            if (this.settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+
+            if (!this.settings.animations) {
+                document.body.classList.add('no-animations');
+            } else {
+                document.body.classList.remove('no-animations');
+            }
+        }
+
+        toggleSetting(settingName, toggleElement) {
+            this.settings[settingName] = !this.settings[settingName];
+            toggleElement.classList.toggle('active', this.settings[settingName]);
+
+
+            if (settingName === 'darkMode' || settingName === 'animations') {
+                this.applySettings();
+            }
+        }
+
+
+        openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        openRenameModal(conversationId, currentName) {
+            this.conversationToRename = conversationId;
+            const modal = document.getElementById('rename-modal');
+            const input = document.getElementById('conversation-name');
+            input.value = currentName;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => input.focus(), 100);
+        }
+
+        closeRenameModal() {
+            const modal = document.getElementById('rename-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            this.conversationToRename = null;
+        }
+
+        openDeleteModal(conversationId, conversationName) {
+            this.conversationToDelete = conversationId;
+            const modal = document.getElementById('delete-modal');
+            const nameSpan = document.getElementById('delete-conversation-name');
+            nameSpan.textContent = conversationName;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            this.conversationToDelete = null;
+        }
+
+        openImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('image-prompt').focus(), 100);
+        }
+
+        closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('image-prompt').value = '';
+            document.getElementById('image-style').value = '';
+        }
+
+        async checkSession() {
+            try {
+                const response = await fetch('/api/auth/session', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.status === 401) {
+                    window.location.href = '/landingpage.html';
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.success && data.user) {
+                    this.userId = data.user.email;
+                    console.log('✅ User session active:', data.user.email);
+                }
+            } catch (error) {
+                console.log('⚠️ Session check failed:', error);
+            }
+        }
+
+        setupEventListeners() {
+            document.getElementById('message-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
+
+            document.getElementById('send-btn').addEventListener('click', () => this.sendMessage());
+            document.getElementById('image-btn').addEventListener('click', () => this.openImageModal());
+            document.getElementById('new-chat-btn').addEventListener('click', () => this.startNewConversation());
+            document.getElementById('settings-btn').addEventListener('click', () => this.openSettingsModal());
+            document.getElementById('logout-btn').addEventListener('click', () => this.logout());
+
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    this.closeAllModals();
+                }
+            });
+
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    this.closeAllModals();
+                }
+            });
+        }
+
+        closeAllModals() {
+            this.closeSettingsModal();
+            this.closeRenameModal();
+            this.closeDeleteModal();
+            this.closeImageModal();
+        }
+
+        async loadConversations() {
+            try {
+                const response = await fetch(`${this.apiBaseUrl}/conversations`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        this.conversations = data.conversations;
+                        this.renderConversationsList();
+
+                        if (this.conversations.length > 0 && !this.currentConversationId) {
+                            this.loadConversation(this.conversations[0].id);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load conversations:', error);
+            }
+        }
+
+        renderConversationsList() {
+            const listContainer = document.getElementById('conversations-list');
+
+            if (this.conversations.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No conversations yet</p>
+                        <p style="font-size: 0.9rem;">Start a new chat to begin!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = this.conversations.map(conv => `
+                <div class="conversation-item ${conv.id === this.currentConversationId ? 'active' : ''}"
+                     onclick="vfChatAI.loadConversation(${conv.id})">
+                    <div class="conversation-icon">${conv.typeIcon || '💬'}</div>
+                    <div class="conversation-content">
+                        <div class="conversation-name">${conv.name}</div>
+                        <div class="conversation-preview">${conv.lastMessage || 'No messages'}</div>
+                        <div class="conversation-date">${new Date(conv.updatedAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="conversation-actions">
+                        <button class="action-icon-btn rename"
+                                onclick="event.stopPropagation(); vfChatAI.openRenameModal(${conv.id}, '${conv.name.replace(/'/g, '\\\'')}')"
+                                title="Rename conversation">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-icon-btn delete"
+                                onclick="event.stopPropagation(); vfChatAI.openDeleteModal(${conv.id}, '${conv.name.replace(/'/g, '\\\'')}')"
+                                title="Delete conversation">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async loadConversation(conversationId) {
+            try {
+                this.currentConversationId = conversationId;
+                this.renderConversationsList();
+
+                const response = await fetch(`${this.apiBaseUrl}/conversations/${conversationId}/messages`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        this.renderConversationMessages(data.messages);
+                        this.showStatus('📂 Conversation loaded', 'success');
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load conversation:', error);
+                this.showStatus('❌ Failed to load conversation', 'danger');
+            }
+        }
+
+        async saveConversationName() {
+            if (!this.conversationToRename) return;
+
+            const newName = document.getElementById('conversation-name').value.trim();
+            if (!newName) {
+                this.showStatus('❌ Conversation name cannot be empty', 'danger');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${this.apiBaseUrl}/conversations/${this.conversationToRename}/rename`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name: newName })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    await this.loadConversations();
+                    this.closeRenameModal();
+                    this.showStatus('✏️ Conversation renamed successfully', 'success');
+                } else {
+                    this.showStatus('❌ Failed to rename conversation', 'danger');
+                }
+            } catch (error) {
+                console.error('Error renaming conversation:', error);
+                this.showStatus('❌ Error renaming conversation', 'danger');
+            }
+        }
+
+        async confirmDeleteConversation() {
+            if (!this.conversationToDelete) return;
+
+            try {
+                const response = await fetch(`${this.apiBaseUrl}/conversations/${this.conversationToDelete}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    if (this.currentConversationId === this.conversationToDelete) {
+                        this.startNewConversation();
+                    }
+                    await this.loadConversations();
+                    this.closeDeleteModal();
+                    this.showStatus('🗑️ Conversation deleted successfully', 'success');
+                } else {
+                    this.showStatus('❌ Failed to delete conversation', 'danger');
+                }
+            } catch (error) {
+                console.error('Error deleting conversation:', error);
+                this.showStatus('❌ Error deleting conversation', 'danger');
+            }
+        }
+
+        async generateImageFromModal() {
+            const prompt = document.getElementById('image-prompt').value.trim();
+            const style = document.getElementById('image-style').value;
+
+            if (!prompt) {
+                this.showStatus('❌ Please enter an image description', 'danger');
+                return;
+            }
+
+            let fullPrompt = prompt;
+            if (style) {
+                fullPrompt = `${prompt}, ${style} style`;
+            }
+
+            this.closeImageModal();
+            this.generateImageWithPrompt(fullPrompt);
+        }
+
+        async generateImageWithPrompt(prompt) {
+            this.addMessage('user', `🎨 Generate image: ${prompt}`);
+            this.showTypingIndicator('🎨 Creating your masterpiece...');
+
+            try {
+                const response = await fetch(`${this.apiBaseUrl}/generate-image`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        conversationId: this.currentConversationId
+                    })
+                });
+
+                const result = await response.json();
+                this.hideTypingIndicator();
+
+                if (result.success && result.imageUrl) {
+                    if (!this.currentConversationId && result.conversationId) {
+                        this.currentConversationId = result.conversationId;
+                        await this.loadConversations();
+                    }
+
+
+                    this.addImageMessageWithValidation(result.aiResponse || '🎨 Image generated successfully!', result.imageUrl);
+                    this.showStatus('🎨 Image generated successfully!', 'success');
+                } else {
+                    this.addMessage('assistant', '❌ Sorry, I couldn\'t generate the image. Please try again.');
+                    this.showStatus('❌ Image generation failed: ' + (result.error || result.message || 'Unknown error'), 'danger');
+                }
+            } catch (error) {
+                this.hideTypingIndicator();
+                this.addMessage('assistant', '🔌 Image generation temporarily unavailable.');
+                this.showStatus('🔌 Image generation error: ' + error.message, 'danger');
+            }
+        }
+
+        renderConversationMessages(messages) {
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = '';
+
+            messages.forEach(message => {
+                const timestamp = new Date(message.createdAt).toLocaleTimeString();
+                const avatar = message.isUserMessage ? '👤' : '🤖';
+                const senderName = message.isUserMessage ? 'You' : 'VF Assistant';
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.isUserMessage ? 'user' : 'assistant'}-message`;
+
+                if (message.isImageMessage) {
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">${avatar}</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-sender">${senderName}</span>
+                                <span class="message-time">${timestamp}</span>
+                            </div>
+                            <div class="image-container">
+                                <img src="${message.content}" alt="Generated image"
+                                     class="generated-image"
+                                     onclick="window.open('${message.content}', '_blank')"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="image-error" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 8px; color: #ef4444;">
+                                    ❌ Failed to load image. <a href="${message.content}" target="_blank" style="color: #6366f1;">Try opening directly</a>
+                                </div>
+                                <div class="image-actions">
+                                    <button onclick="window.open('${message.content}', '_blank')" class="action-btn">
+                                        <i class="fas fa-external-link-alt"></i> Open
+                                    </button>
+                                    <button onclick="vfChatAI.downloadImage('${message.content}', 'vfchat-conversation-image')" class="action-btn">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">${avatar}</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-sender">${senderName}</span>
+                                <span class="message-time">${timestamp}</span>
+                            </div>
+                            <div class="message-text">${this.formatMessage(message.content)}</div>
+                        </div>
+                    `;
+                }
+
+                messagesContainer.appendChild(messageDiv);
+            });
+
+            this.scrollToBottom();
+        }
+
+        async sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+
+            if (!message) return;
+
+            messageInput.value = '';
+            this.addMessage('user', message);
+            this.showTypingIndicator();
+
+            try {
+                const response = await fetch(`${this.apiBaseUrl}/send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        message: message,
+                        conversationId: this.currentConversationId
+                    })
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    this.hideTypingIndicator();
+                    this.addMessage('assistant', '🔐 Authentication required. Please log in first.');
+                    this.showStatus('🔐 Please log in to continue', 'warning');
+                    setTimeout(() => {
+                        window.location.href = '/landingpage.html';
+                    }, 2000);
+                    return;
+                }
+
+                const result = await response.json();
+                this.hideTypingIndicator();
+
+                if (result.success) {
+                    if (!this.currentConversationId && result.conversationId) {
+                        this.currentConversationId = result.conversationId;
+                        await this.loadConversations();
+                    }
+
+                    if (result.imageUrl) {
+                        this.addImageMessageWithValidation(result.aiResponse || 'Image generated successfully!', result.imageUrl);
+                        this.showStatus(`🎨 Image generated successfully!`, 'success');
+                    } else if (result.aiResponse) {
+                        this.addMessage('assistant', result.aiResponse);
+                        this.showStatus('✅ Message sent successfully', 'success');
+                    } else {
+                        this.addMessage('assistant', result.message || 'I received your message but had trouble generating a response.');
+                        this.showStatus('⚠️ Unexpected response format', 'warning');
+                    }
+                } else {
+                    this.addMessage('assistant', '❌ Sorry, I encountered an error. Please try again.');
+                    this.showStatus('❌ ' + (result.error || result.message || 'Unknown error'), 'danger');
+                }
+            } catch (error) {
+                this.hideTypingIndicator();
+                this.addMessage('assistant', '🔌 Connection error. Please check your internet and try again.');
+                this.showStatus('🔌 Network error: ' + error.message, 'danger');
+            }
+        }
+
+        startNewConversation() {
+            this.currentConversationId = null;
+
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = `
+                <div class="message assistant-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">VF Assistant</span>
+                            <span class="message-time">Just now</span>
+                        </div>
+                        <div class="message-text">
+                            <strong>✨ New Conversation Started!</strong>
+                            <br><br>
+                            Ready for a fresh start! I'm here to help with any questions, creative projects, coding challenges, or image generation requests.
+                            <br><br>
+                            <em>What shall we create together?</em>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            this.renderConversationsList();
+            this.showStatus('🚀 New conversation initialized', 'success');
+            document.getElementById('message-input').focus();
+        }
+
+        addMessage(sender, content) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const timestamp = new Date().toLocaleTimeString();
+            const avatar = sender === 'user' ? '👤' : '🤖';
+            const senderName = sender === 'user' ? 'You' : 'VF Assistant';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-sender">${senderName}</span>
+                        <span class="message-time">${timestamp}</span>
+                    </div>
+                    <div class="message-text">${this.formatMessage(content)}</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+            this.scrollToBottom();
+        }
+
+        addImageMessageWithValidation(responseText, imageUrl) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const timestamp = new Date().toLocaleTimeString();
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant-message image-message';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-sender">VF Assistant</span>
+                        <span class="message-time">${timestamp}</span>
+                    </div>
+                    <div class="message-text">${responseText}</div>
+                    <div class="image-container">
+                        <div class="image-loading" style="display: flex; align-items: center; justify-content: center; height: 200px; background: rgba(99, 102, 241, 0.1); border-radius: 8px; margin: 0.5rem 0;">
+                            <div style="text-align: center; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                <div>Loading image...</div>
+                            </div>
+                        </div>
+                        <img src="${imageUrl}"
+                             alt="Generated image"
+                             class="generated-image"
+                             style="display: none;"
+                             onclick="window.open('${imageUrl}', '_blank')"
+                             onload="this.style.display='block'; this.previousElementSibling.style.display='none'; this.nextElementSibling.style.display='flex';"
+                             onerror="this.style.display='none'; this.previousElementSibling.style.display='none'; this.nextElementSibling.nextElementSibling.style.display='block';">
+                        <div class="image-actions" style="display: none;">
+                            <button onclick="window.open('${imageUrl}', '_blank')" class="action-btn">
+                                <i class="fas fa-external-link-alt"></i> Open Full
+                            </button>
+                            <button onclick="navigator.clipboard.writeText('${imageUrl}').then(() => vfChatAI.showStatus('📋 URL copied!', 'success'))" class="action-btn">
+                                <i class="fas fa-copy"></i> Copy URL
+                            </button>
+                            <button onclick="vfChatAI.downloadImage('${imageUrl}', 'vfchat-image')" class="action-btn">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                        <div class="image-error" style="display: none; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 8px; color: #ef4444; margin-top: 0.5rem;">
+                            ❌ Failed to load image. The image may still be generating.
+                            <a href="${imageUrl}" target="_blank" style="color: #6366f1;">Try opening directly</a>
+                            <br><br>
+                            <button onclick="location.reload()" class="action-btn" style="margin-top: 0.5rem;">
+                                <i class="fas fa-refresh"></i> Refresh Page
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+            this.scrollToBottom();
+
+
+            setTimeout(() => {
+                const img = messageDiv.querySelector('.generated-image');
+                const loading = messageDiv.querySelector('.image-loading');
+                const error = messageDiv.querySelector('.image-error');
+
+                if (loading && loading.style.display !== 'none') {
+                    loading.style.display = 'none';
+                    error.style.display = 'block';
+                    console.warn('Image loading timeout for URL:', imageUrl);
+                }
+            }, 30000);
+        }
+
+        formatMessage(content) {
+            return content
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--accent);">$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em style="color: var(--text-secondary);">$1</em>')
+                .replace(/`(.*?)`/g, '<code style="background: rgba(99, 102, 241, 0.2); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px; font-family: JetBrains Mono, monospace;">$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+
+        showTypingIndicator(message = '🤖 VF Assistant is thinking...') {
+            if (!this.settings.typingIndicator) return;
+
+            this.hideTypingIndicator();
+
+            const messagesContainer = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'message assistant-message typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-sender">VF Assistant</span>
+                        <span class="message-time">Now</span>
+                    </div>
+                    <div style="color: var(--text-secondary);">
+                        ${message}
+                        <div class="typing-animation">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(typingDiv);
+            this.scrollToBottom();
+        }
+
+        hideTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('chat-status');
+            statusDiv.className = `chat-status alert alert-${type}`;
+            statusDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+            statusDiv.style.display = 'block';
+
+            if (type !== 'danger') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 4000);
+            }
+
+
+            if (this.settings.soundEffects) {
+                this.playNotificationSound(type);
+            }
+        }
+
+        playNotificationSound(type) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+
+                const frequencies = {
+                    success: 800,
+                    info: 600,
+                    warning: 400,
+                    danger: 300
+                };
+
+                oscillator.frequency.setValueAtTime(frequencies[type] || 600, audioContext.currentTime);
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (error) {
+                console.log('Could not play notification sound:', error);
+            }
+        }
+
+        async downloadImage(imageUrl, filename = 'vfchat-generated') {
+            try {
+                this.showStatus('📥 Starting download...', 'info');
+                
+
+                const downloadUrl = `/api/image/download?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(filename)}`;
+                
+
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.style.display = 'none';
+                link.target = '_blank';
+                
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                this.showStatus('📥 Download started successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                this.showStatus('❌ Download failed, opening in new tab...', 'warning');
+                
+
+                try {
+                    window.open(imageUrl, '_blank');
+                    this.showStatus('🔗 Image opened in new tab', 'info');
+                } catch (fallbackError) {
+                    console.error('Fallback error:', fallbackError);
+                    this.showStatus('❌ Unable to download or open image', 'danger');
+                }
+            }
+        }
+
+
+        async exportConversations() {
+            try {
+                const exportData = {
+                    timestamp: new Date().toISOString(),
+                    conversations: this.conversations,
+                    settings: this.settings,
+                    version: '1.0'
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                link.download = `vfchat-export-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                this.showStatus('📤 Conversations exported successfully', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                this.showStatus('❌ Failed to export conversations', 'danger');
+            }
+        }
+
+        async clearAllData() {
+            if (!confirm('⚠️ This will delete ALL your conversations and settings. This action cannot be undone. Are you sure?')) {
+                return;
+            }
+
+            if (!confirm('🚨 Last chance! This will permanently delete everything. Continue?')) {
+                return;
+            }
+
+            try {
+
+                localStorage.removeItem('vfchat_settings');
+
+
+                this.conversations = [];
+                this.currentConversationId = null;
+                this.settings = this.loadSettings();
+
+
+                this.renderConversationsList();
+                this.startNewConversation();
+
+                this.showStatus('🗑️ All data cleared successfully', 'success');
+                this.closeSettingsModal();
+            } catch (error) {
+                console.error('Clear data error:', error);
+                this.showStatus('❌ Failed to clear data', 'danger');
+            }
+        }
+
+        async logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await fetch('/api/auth/logout', {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    this.showStatus('👋 Logging out...', 'info');
+                    setTimeout(() => {
+                        window.location.href = '/landingpage.html';
+                    }, 1000);
+                } catch (error) {
+                    window.location.href = '/landingpage.html';
+                }
+            }
+        }
+
+        scrollToBottom() {
+            const container = document.getElementById('chat-messages');
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeParticles();
+        window.vfChatAI = new VFChatAI();
+        document.getElementById('message-input').focus();
+        console.log('⚡ VFChat AI initialized successfully!');
+    });
+</script>
+</body>
+</html>

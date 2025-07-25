@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFChat - Authentication Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f23, #1a1a3a);
+            color: white;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(26, 26, 58, 0.8);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(15, 15, 35, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #6366f1;
+        }
+        .success { border-left-color: #22c55e; }
+        .error { border-left-color: #ef4444; }
+        .warning { border-left-color: #f59e0b; }
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .online { background: #22c55e; }
+        .offline { background: #ef4444; }
+        .unknown { background: #f59e0b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔧 VFChat - System Status & Authentication Test</h1>
+
+    <div class="test-section">
+        <h3>🔐 Authentication Status</h3>
+        <p id="auth-status">Checking authentication...</p>
+        <button onclick="checkAuth()">🔄 Refresh Auth Status</button>
+        <button onclick="testLogin()">🧪 Test Login</button>
+        <pre id="auth-details"></pre>
+    </div>
+
+    <div class="test-section">
+        <h3>🤖 AI Service Health</h3>
+        <p id="ai-status">Checking AI services...</p>
+        <button onclick="checkAI()">🔄 Check AI Health</button>
+        <button onclick="testAIChat()">💬 Test AI Chat</button>
+        <pre id="ai-details"></pre>
+    </div>
+
+    <div class="test-section">
+        <h3>🎨 Image Generation Test</h3>
+        <p id="image-status">Ready to test</p>
+        <button onclick="testImageGeneration()">🎨 Test Image Generation</button>
+        <pre id="image-details"></pre>
+    </div>
+
+    <div class="test-section">
+        <h3>⚡ Quick Actions</h3>
+        <button onclick="window.location.href='/landingpage.html'">🏠 Go to Landing Page</button>
+        <button onclick="window.location.href='/chat.html'">💬 Go to Chat</button>
+        <button onclick="logout()">🚪 Logout</button>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 System Information</h3>
+        <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+        <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+        <p><strong>Local Time:</strong> <span id="local-time"></span></p>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById('current-url').textContent = window.location.href;
+    document.getElementById('user-agent').textContent = navigator.userAgent;
+    document.getElementById('local-time').textContent = new Date().toLocaleString();
+
+    function updateStatus(elementId, message, type = 'unknown') {
+        const element = document.getElementById(elementId);
+        const indicator = type === 'success' ? '🟢' : type === 'error' ? '🔴' : '🟡';
+        element.innerHTML = `${indicator} ${message}`;
+    }
+
+    function showDetails(elementId, data) {
+        document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function checkAuth() {
+        try {
+            updateStatus('auth-status', 'Checking authentication...', 'unknown');
+
+            const response = await fetch('/api/auth/session', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                updateStatus('auth-status', `Authenticated as: ${data.user.email}`, 'success');
+            } else if (response.status === 401) {
+                updateStatus('auth-status', 'Not authenticated (401)', 'error');
+            } else {
+                updateStatus('auth-status', `Auth error: ${data.error || 'Unknown'}`, 'error');
+            }
+
+            showDetails('auth-details', {
+                status: response.status,
+                response: data,
+                timestamp: new Date().toISOString()
+            });
+
+        } catch (error) {
+            updateStatus('auth-status', `Network error: ${error.message}`, 'error');
+            showDetails('auth-details', { error: error.message });
+        }
+    }
+
+    async function checkAI() {
+        try {
+            updateStatus('ai-status', 'Checking AI services...', 'unknown');
+
+            const response = await fetch('/api/ai/health');
+            const data = await response.json();
+
+            if (response.ok && data.overall && data.overall.healthy) {
+                updateStatus('ai-status', 'AI services online and healthy', 'success');
+            } else {
+                updateStatus('ai-status', 'AI services have issues', 'error');
+            }
+
+            showDetails('ai-details', data);
+
+        } catch (error) {
+            updateStatus('ai-status', `AI service error: ${error.message}`, 'error');
+            showDetails('ai-details', { error: error.message });
+        }
+    }
+
+    async function testLogin() {
+        const email = prompt('Enter test email:');
+        const password = prompt('Enter test password:');
+
+        if (!email || !password) return;
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                updateStatus('auth-status', 'Login successful!', 'success');
+                checkAuth(); // Refresh auth status
+            } else {
+                updateStatus('auth-status', `Login failed: ${data.error}`, 'error');
+            }
+
+            showDetails('auth-details', data);
+
+        } catch (error) {
+            updateStatus('auth-status', `Login error: ${error.message}`, 'error');
+        }
+    }
+
+    async function testAIChat() {
+        try {
+            const message = prompt('Enter test message:', 'Hello, are you working?');
+            if (!message) return;
+
+            updateStatus('ai-status', 'Testing AI chat...', 'unknown');
+
+            const response = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    message: message,
+                    userId: 'test_user',
+                    provider: 'gemini'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                updateStatus('ai-status', 'AI chat test successful!', 'success');
+            } else {
+                updateStatus('ai-status', `AI chat failed: ${data.message || 'Unknown error'}`, 'error');
+            }
+
+            showDetails('ai-details', data);
+
+        } catch (error) {
+            updateStatus('ai-status', `AI chat error: ${error.message}`, 'error');
+        }
+    }
+
+    async function testImageGeneration() {
+        try {
+            const prompt = prompt('Enter image prompt:', 'a beautiful sunset');
+            if (!prompt) return;
+
+            updateStatus('image-status', 'Testing image generation...', 'unknown');
+
+            const response = await fetch('/api/ai/generate-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    message: prompt,
+                    userId: 'test_user'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data && data.data.imageUrl) {
+                updateStatus('image-status', 'Image generation successful!', 'success');
+
+                const img = document.createElement('img');
+                img.src = data.data.imageUrl;
+                img.style.maxWidth = '300px';
+                img.style.borderRadius = '8px';
+                img.style.marginTop = '10px';
+                document.getElementById('image-details').parentNode.appendChild(img);
+            } else {
+                updateStatus('image-status', `Image generation failed: ${data.message || 'Unknown error'}`, 'error');
+            }
+
+            showDetails('image-details', data);
+
+        } catch (error) {
+            updateStatus('image-status', `Image generation error: ${error.message}`, 'error');
+        }
+    }
+
+    async function logout() {
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+            updateStatus('auth-status', 'Logged out successfully', 'success');
+            setTimeout(() => checkAuth(), 1000);
+        } catch (error) {
+            updateStatus('auth-status', `Logout error: ${error.message}`, 'error');
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        checkAI();
+    });
+</script>
+</body>
+</html>

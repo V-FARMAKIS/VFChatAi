@@ -1,0 +1,228 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/maintarget/
+!**/src/testtarget/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+# Spring Boot
+HELP.md
+spring-boot-*.log
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/mainout/
+!**/src/testout/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/mainbin/
+!**/src/testbin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/mainbuild/
+!**/src/testbuild/
+
+### VS Code ###
+.vscode/
+*.code-workspace
+
+# Operating System
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### Linux ###
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Application specific
+generated-images/
+static/generated-images/
+test-downloads/
+
+# Docker
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~.nib
+local.properties
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+keystore.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node modules (if any frontend tooling is added)
+node_modules/
+
+# Package managers
+*.lock
+yarn.lock
+package-lock.json
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Large media files (if any)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Editor directories and files
+.vscode-test/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# JetBrains
+.ideaworkspace.xml
+.ideatasks.xml
+.ideausage.statistics.xml
+.ideadictionaries
+.ideashelf
+.ideacontentModel.xml
+.ideadataSources/
+.ideadataSources.ids
+.ideadataSources.local.xml
+.ideasqlDataSources.xml
+.ideadynamic.xml
+.ideauiDesigner.xml
+.ideadbnavigator.xml
+
+# Gradle (if added later)
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/mainbuild/
+!**/src/testbuild/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# CMake (if native code is added)
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+.env
+src/main/resources/application.properties
+src/main/resources/application.yml
+.env

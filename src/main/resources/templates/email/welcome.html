@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFChatAI - Welcome!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #28a745;
+        }
+        
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .action-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #dee2e6;
+        }
+        
+        .start-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .tips {
+            text-align: left;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tips h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .tips li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">🤖 VFChatAI</div>
+            <div class="subtitle">Your Account is Ready!</div>
+        </div>
+        
+        <div class="content">
+            <div class="success-icon">🎉</div>
+            <h1 class="welcome-title">Account Successfully Created!</h1>
+            
+            <p class="message">
+                Congratulations! Your VFChatAI account has been successfully verified and is now ready to use. 
+                You can start chatting with our advanced AI assistant and creating amazing images right away!
+            </p>
+            
+            <div class="action-section">
+                <h3>Ready to Start?</h3>
+                <a href="{{CHAT_LINK}}" class="start-button">
+                    🚀 Start Chatting Now
+                </a>
+                
+                <p style="font-size: 14px; color: #666; margin-top: 15px;">
+                    Click the button above or visit: <br>
+                    <span style="color: #667eea;">{{CHAT_LINK}}</span>
+                </p>
+            </div>
+            
+            <div class="tips">
+                <h4>Getting Started Tips:</h4>
+                <ul>
+                    <li>Create separate conversations for different topics</li>
+                    <li>Use "💬 Chat" conversations for text discussions</li>
+                    <li>Use "🎨 Image" conversations for AI art generation</li>
+                    <li>Your conversation history is automatically saved</li>
+                    <li>You can rename or delete conversations anytime</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>🤖 VFChatAI - Your Intelligent AI Assistant</div>
+            <div style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+                © 2025 VFChatAI. All rights reserved.<br>
+                Welcome to the future of AI conversations!
+            </div>
+        </div>
+    </div>
+</body>
+</html>

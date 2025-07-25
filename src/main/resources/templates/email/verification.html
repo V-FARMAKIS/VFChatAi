@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VFChatAI - Email Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .welcome-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .verification-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #dee2e6;
+        }
+        
+        .verification-code {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px dashed #667eea;
+        }
+        
+        .verify-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            text-align: center;
+            margin: 10px;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .feature-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .security-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .verification-code {
+                font-size: 28px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">🤖 VFChatAI</div>
+            <div class="subtitle">Your Intelligent AI Assistant</div>
+        </div>
+        
+        <div class="content">
+            <h1 class="welcome-title">Welcome to VFChatAI! 🎉</h1>
+            
+            <p class="message">
+                Thank you for joining VFChatAI, the most advanced AI-powered chat platform! 
+                To complete your registration and start chatting with our intelligent AI assistant, 
+                please verify your email address.
+            </p>
+            
+            <div class="verification-section">
+                <h3>Your Verification Code:</h3>
+                <div class="verification-code">{{VERIFICATION_CODE}}</div>
+                
+                <a href="{{VERIFICATION_LINK}}" class="verify-button">
+                    ✅ Verify Email Address
+                </a>
+                
+                <p style="font-size: 14px; color: #666; margin-top: 15px;">
+                    Or copy and paste this link in your browser:<br>
+                    <span style="word-break: break-all; color: #667eea;">{{VERIFICATION_LINK}}</span>
+                </p>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">Smart Conversations</div>
+                    <div class="feature-desc">Chat with advanced AI powered by Gemini</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">AI Image Generation</div>
+                    <div class="feature-desc">Create beautiful images with AI</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">Conversation History</div>
+                    <div class="feature-desc">Your chats are saved and organized</div>
+                </div>
+            </div>
+            
+            <div class="security-note">
+                <strong>Security Note:</strong> This verification code expires in 15 minutes. 
+                If you didn't create an account with VFChatAI, please ignore this email.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>🤖 VFChatAI - Your Intelligent AI Assistant</div>
+            <div style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+                © 2025 VFChatAI. All rights reserved.<br>
+                This email was sent to {{USER_EMAIL}}.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
