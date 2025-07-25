@@ -70,11 +70,12 @@
 ### Chat Page
 ![Screenshot](Images/Screenshot_6.png)
 
+### Verification Page
+![Screenshot](Images/Screenshot_2.png)
+
 ### Email Template
 ![Screenshot](Images/Screenshot_3.png)
 
-### Verification Page
-![Screenshot](Images/Screenshot_2.png)
 
 ---
 ## 🏗️ Architecture
