@@ -63,6 +63,17 @@
 
 ---
 
+## 🔮 Images
+- **Landing Page
+![Screenshot](Images/Screenshot_1.png)
+- **Chat Page
+![Screenshot](Images/Screenshot_6.png)
+- **Email Template
+![Screenshot](Images/Screenshot_3.png)
+- **Verification Page
+![Screenshot](Images/Screenshot_3.png)
+
+---
 ## 🏗️ Architecture
 
 ### Technology Stack
