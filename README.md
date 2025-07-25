@@ -223,83 +223,15 @@ docker run -p 8080:8080 --env-file .env vfchatai:latest
 
 ### Security Features
 - **🔐 BCrypt Password Hashing** - Configurable strength (default: 12)
-- **🛡️ CSRF Protection** - Spring Security CSRF tokens
 - **📧 Email Verification** - 2FA with time-limited codes
-- **🚦 Rate Limiting** - Prevents brute force attacks
 - **🔄 Session Management** - Secure session handling
 - **✅ Input Validation** - Comprehensive input sanitization
 
 See [SECURITY.md](SECURITY.md) for detailed security information.
 
 ---
-
-## 🧪 Testing
-
-### Running Tests
-```bash
-# Run all tests
-mvn test
-
-# Run with coverage
-mvn test jacoco:report
-
-# Run specific test class
-mvn test -Dtest=UserServiceTest
-```
-
----
-
-## 🚨 Troubleshooting
-
-### Common Issues & Solutions
-
-#### Database Connection Issues
-```bash
-# Check PostgreSQL status
-sudo systemctl status postgresql
-
-# Common fixes
-- Ensure PostgreSQL is running on port 5432
-- Check username/password in .env file
-- Verify database exists
-```
-
-#### Email Not Sending
-```bash
-# Debug SMTP settings
-- Verify SMTP credentials in .env
-- Check Gmail app password (not regular password)
-- Test with different SMTP provider
-- Check firewall blocking port 587
-```
-
-#### AI Chat Not Working
-```bash
-# Common fixes
-- Check API key validity
-- Verify internet connectivity
-- Review API quotas and limits
-```
-
----
-
 ## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Quick Contribution Steps
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Code Style
-- **Java**: Follow Google Java Style Guide
-- **JavaScript**: Use ES6+ standards with Prettier formatting
-- **CSS**: BEM methodology for class naming
-- **Git**: Conventional commits (feat:, fix:, docs:, etc.)
-
+Please see [Contributing Guide](CONTRIBUTING.md) for details.
 ---
 
 ## 🗺️ Roadmap
@@ -323,17 +255,16 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 <div align="center">
 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/VFChatAI?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/VFChatAI?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/VFChatAI)
-![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/VFChatAI)
+![GitHub stars](https://img.shields.io/github/stars/V-FARMAKIS/VFChatAi?style=social)
+![GitHub forks](https://img.shields.io/github/forks/V-FARMAKIS/VFChatAi?style=social)
+![GitHub issues](https://img.shields.io/github/issues/V-FARMAKIS/VFChatAi)
+![GitHub last commit](https://img.shields.io/github/last-commit/V-FARMAKIS/VFChatAi)
 
 </div>
 
 ### Codebase Metrics
-- **Lines of Code**: ~15,000+
-- **Languages**: Java (70%), JavaScript (20%), HTML/CSS (10%)
-- **Test Coverage**: 85%+
+- **Lines of Code**: ~12,000
+- **Languages**: ~ Java (35%), JavaScript (5%), HTML/CSS (50%)
 - **Dependencies**: 25 (production), 15 (development)
 
 ---
@@ -341,22 +272,12 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## 📚 Resources
 
 ### Documentation
-- **[API Reference](https://github.com/yourusername/VFChatAI/wiki/API-Reference)** - Complete API documentation
-- **[Deployment Guide](https://github.com/yourusername/VFChatAI/wiki/Deployment)** - Production deployment instructions
-- **[Configuration Guide](https://github.com/yourusername/VFChatAI/wiki/Configuration)** - Detailed configuration options
+- **[API Reference](https://github.com/V-FARMAKIS/VFChatAi/wiki/API-Reference)** - Complete API documentation
+- **[Deployment Guide](https://github.com/V-FARMAKIS/VFChatAi/wiki/Deployment)** - Production deployment instructions
+- **[Configuration Guide](https://github.com/V-FARMAKIS/VFChatAi/wiki/Configuration)** - Detailed configuration options
 
 ### Community
-- **[GitHub Discussions](https://github.com/yourusername/VFChatAI/discussions)** - Feature requests and Q&A
-- **[Stack Overflow](https://stackoverflow.com/questions/tagged/vfchatai)** - Technical questions
-
----
-
-## 🏆 Awards & Recognition
-
-- **🥇 Best AI Integration** - Spring Boot Community Awards 2025
-- **🚀 Trending Repository** - GitHub Trending Java Projects
-- **⭐ Developer Choice** - Java Developer Community
-
+- **[GitHub Discussions](https://github.com/V-FARMAKIS/VFChatAi/discussions)** - Feature requests and Q&A
 ---
 
 ## 📝 License
@@ -371,29 +292,12 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-## 🙏 Acknowledgments
-
-### Special Thanks
-- **Spring Boot Team** - For the excellent framework
-- **Google AI Team** - For Gemini API access
-- **PostgreSQL Community** - For the robust database
-- **Open Source Contributors** - For various libraries and tools
-
----
-
 <div align="center">
 
 ### 🚀 Ready to Start?
 
 **[📥 Download Latest Release](https://github.com/yourusername/VFChatAI/releases/latest)** · **[📖 Read the Docs](https://github.com/yourusername/VFChatAI/wiki)**
 
----
-
-**Made with ❤️ by the VFChatAI Team**
-
-![Footer Image](https://img.shields.io/badge/Powered%20by-Spring%20Boot%20%7C%20PostgreSQL%20%7C%20Gemini%20AI-blue?style=for-the-badge)
-
----
 
 ⭐ **Star this repository if you found it helpful!** ⭐
 
