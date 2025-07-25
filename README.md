@@ -38,6 +38,7 @@
 
 ### 🤖 AI-Powered Chat
 - **Google Gemini Integration** - Advanced AI responses using Gemini 1.5 Flash
+- **Image Generation** - Image generation using Pollination.ai
 - **Real-time Conversations** - Smooth, responsive chat interface
 - **Conversation Management** - Save, rename, and organize chat sessions
 - **Context Awareness** - AI maintains conversation context across messages
@@ -234,22 +235,6 @@ See [SECURITY.md](SECURITY.md) for detailed security information.
 Please see [Contributing Guide](CONTRIBUTING.md) for details.
 ---
 
-## 🗺️ Roadmap
-
-### Version 1.1.0 (Q2 2025)
-- [ ] **Real-time Chat**: WebSocket implementation
-- [ ] **File Uploads**: Image and document sharing
-- [ ] **Chat Export**: PDF/JSON conversation exports
-- [ ] **Multiple AI Models**: OpenAI, Claude, Cohere integration
-- [ ] **Mobile App**: React Native or Flutter app
-
-### Version 1.2.0 (Q3 2025)
-- [ ] **Voice Chat**: Audio message support
-- [ ] **Team Workspaces**: Multi-user collaboration
-- [ ] **Advanced Analytics**: Usage metrics and insights
-- [ ] **Plugin System**: Third-party integrations
-
----
 
 ## 📊 Project Stats
 
