@@ -64,13 +64,16 @@
 ---
 
 ## 🔮 Images
-###Landing Page
+### Landing Page
 ![Screenshot](Images/Screenshot_1.png)
-- **Chat Page
+
+### Chat Page
 ![Screenshot](Images/Screenshot_6.png)
-- **Email Template
+
+### Email Template
 ![Screenshot](Images/Screenshot_3.png)
-- **Verification Page
+
+### Verification Page
 ![Screenshot](Images/Screenshot_2.png)
 
 ---
