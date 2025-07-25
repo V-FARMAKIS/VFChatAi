@@ -15,15 +15,14 @@ We take security seriously and provide security updates for the following versio
 
 Instead, please report them responsibly by:
 
-### 1. Email Reporting
-Send details to: **security@vfchatai.com** (if available) or create a private security advisory
 
-### 2. GitHub Security Advisory
+
+### 1. GitHub Security Advisory
 1. Go to the repository's Security tab
 2. Click "Report a vulnerability"
 3. Fill out the security advisory form
 
-### 3. What to Include
+### 2. What to Include
 Please include as much information as possible:
 
 - **Type of issue** (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
@@ -33,11 +32,6 @@ Please include as much information as possible:
 - **Step-by-step instructions** to reproduce the issue
 - **Proof-of-concept or exploit code** (if possible)
 - **Impact** of the issue, including how an attacker might exploit it
-
-### 4. Response Timeline
-- **Initial Response**: Within 48 hours of report
-- **Status Update**: Weekly updates on progress
-- **Resolution**: Target resolution within 90 days for critical issues
 
 ## Security Measures
 
@@ -88,7 +82,6 @@ Please include as much information as possible:
 - [x] Input validation and sanitization
 - [x] CSRF protection
 - [x] SQL injection protection
-- [x] Rate limiting
 - [x] Secure headers configuration
 
 ### Planned Security Enhancements
@@ -101,22 +94,6 @@ Please include as much information as possible:
 - [ ] IP whitelisting capabilities
 - [ ] Session timeout configuration
 
-## Vulnerability Disclosure Timeline
-
-1. **T+0**: Vulnerability reported
-2. **T+2 days**: Initial assessment and acknowledgment
-3. **T+7 days**: Detailed analysis and reproduction
-4. **T+14 days**: Fix development begins
-5. **T+30 days**: Testing and validation
-6. **T+45 days**: Security patch release
-7. **T+60 days**: Public disclosure (if appropriate)
-
-## Security Contact
-
-For security-related questions or concerns:
-- **Email**: security@vfchatai.com (if available)
-- **GitHub**: Use private security advisory feature
-- **Response Time**: Within 48 hours
 
 ## Hall of Fame
 
