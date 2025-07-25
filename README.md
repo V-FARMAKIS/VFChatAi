@@ -12,7 +12,7 @@
 
 **A streamlined Spring Boot application with AI-powered chat, 2FA email verification, and conversation management.**
 
-[🚀 **Live Demo**](https://vfchatai.com) · [📖 **Documentation**](https://github.com/yourusername/VFChatAI/wiki) · [🐛 **Report Bug**](https://github.com/yourusername/VFChatAI/issues) · [💡 **Request Feature**](https://github.com/yourusername/VFChatAI/issues)
+· [📖 **Documentation**](https://github.com/V-FARMAKIS/VFChatAi/wiki) · [🐛 **Report Bug**](https://github.com/V-FARMAKIS/VFChatAi/issues) · [💡 **Request Feature**](https://github.com/V-FARMAKIS/VFChatAi/issues)
 
 </div>
 
